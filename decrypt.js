@@ -1,7 +1,14 @@
-var crypto = require('crypto');
+const crypto = require('crypto');
+const fs = require('fs');
 
-var mykey = crypto.createDecipher('aes-128-cbc', 'mypassword');
-var mystr = mykey.update('fdd794490b51d5c0380b96b94bc3357c', 'hex', 'utf8')
-mystr += mykey.final('utf8');
+let filestrings = fs.readFileSync("./abc_encrypted.txt").toString().split("\n");
+let encryptedStrings = [];
 
-console.log(mystr);
+filestrings.forEach(element => {
+    var mykey = crypto.createDecipher('aes-128-cbc', 'mypassword');
+    var mystr = mykey.update(element, 'hex', 'utf8')
+    mystr += mykey.final('utf8');
+    encryptedStrings.push(mystr.toString());
+});
+
+fs.writeFileSync("./abc_decrypted.txt",encryptedStrings.join("\n"));
